@@ -5,7 +5,7 @@ This guide provides detailed instructions for deploying the Palestine NFT projec
 ## Server Information
 - **SSH Access**: `echoesofstreet`
 - **Server IP**: `95.216.25.234`
-- **Web Server**: Nginx (needs to be installed)
+- **Web Server**: Nginx (installed on port 8080)
 - **Domain**: `voiceforpalestine.xyz`
 
 ## Prerequisites
@@ -89,16 +89,20 @@ sudo systemctl status nginx
 2. Add the following configuration:
    ```nginx
    server {
-       listen 80;
+       listen 8080;
        server_name voiceforpalestine.xyz www.voiceforpalestine.xyz;
 
+       root /var/www/voiceforpalestine.xyz;
+       index index.html;
+
        location / {
-           proxy_pass http://localhost:3000;
-           proxy_http_version 1.1;
-           proxy_set_header Upgrade $http_upgrade;
-           proxy_set_header Connection 'upgrade';
-           proxy_set_header Host $host;
-           proxy_cache_bypass $http_upgrade;
+           try_files $uri $uri.html $uri/ /index.html;
+       }
+
+       # Cache static assets
+       location ~* \.(jpg|jpeg|png|gif|ico|css|js)$ {
+           expires 30d;
+           add_header Cache-Control "public, no-transform";
        }
    }
    ```
@@ -110,7 +114,7 @@ sudo systemctl status nginx
    sudo systemctl restart nginx
    ```
 
-### 5. Deploy the Next.js application using PM2
+### 5. Deploy the Next.js application
 
 1. Create a directory for the application:
    ```bash
@@ -118,25 +122,20 @@ sudo systemctl status nginx
    sudo chown -R $USER:$USER /var/www/voiceforpalestine.xyz
    ```
 
-2. Copy the frontend files to the server:
+2. Build the Next.js application locally:
+   ```bash
+   # On your local machine
+   cd frontend
+   npm run build
+   ```
+
+3. Copy the built files to the server:
    ```bash
    # From your local machine
-   scp -r frontend/* echoesofstreet:/var/www/voiceforpalestine.xyz/
+   scp -r frontend/.next frontend/public frontend/package.json frontend/package-lock.json echoesofstreet:/var/www/voiceforpalestine.xyz/
    ```
 
-3. Install dependencies on the server:
-   ```bash
-   cd /var/www/voiceforpalestine.xyz
-   npm install --production
-   ```
-
-4. Start the Next.js application with PM2:
-   ```bash
-   cd /var/www/voiceforpalestine.xyz
-   pm2 start npm --name "palestine-nft" -- start
-   pm2 save
-   pm2 startup
-   ```
+4. The application will be served directly by Nginx as static files, no need for PM2.
 
 ## SSL Configuration (HTTPS)
 
@@ -164,16 +163,6 @@ sudo systemctl status nginx
 ### Check Nginx error logs
 ```bash
 sudo tail -f /var/log/nginx/error.log
-```
-
-### Check application logs
-```bash
-pm2 logs palestine-nft
-```
-
-### Restart the application
-```bash
-pm2 restart palestine-nft
 ```
 
 ### Restart Nginx
