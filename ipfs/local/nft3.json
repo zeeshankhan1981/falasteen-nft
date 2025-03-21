@@ -1,0 +1,11 @@
+{
+  "name": "Falasteen NFT",
+  "description": "Support Palestine by minting this NFT. All proceeds go directly to charity.",
+  "image": "/img/falasteen-nft.png",
+  "attributes": [
+    {
+      "trait_type": "Cause",
+      "value": "Palestine Relief"
+    }
+  ]
+}

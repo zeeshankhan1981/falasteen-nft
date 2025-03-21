@@ -1,0 +1,13 @@
+{
+  "name": "palestine-nft-ipfs",
+  "version": "1.0.0",
+  "description": "IPFS upload utilities for Palestine NFT project",
+  "main": "upload-to-ipfs.js",
+  "scripts": {
+    "upload": "node upload-to-ipfs.js"
+  },
+  "dependencies": {
+    "ipfs-http-client": "^56.0.3",
+    "fs-extra": "^10.1.0"
+  }
+}

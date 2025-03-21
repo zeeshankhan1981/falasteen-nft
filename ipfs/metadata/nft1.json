@@ -1,0 +1,20 @@
+{
+  "name": "Palestine Freedom #1",
+  "description": "Support Palestine with this NFT. All proceeds go directly to charity.",
+  "image": "/img/falasteen-child-nft.png",
+  "attributes": [
+    {
+      "trait_type": "Category",
+      "value": "Solidarity"
+    },
+    {
+      "trait_type": "Cause",
+      "value": "Palestine Relief"
+    },
+    {
+      "trait_type": "Edition",
+      "value": "1"
+    }
+  ],
+  "external_url": "https://voiceforpalestine.xyz"
+}

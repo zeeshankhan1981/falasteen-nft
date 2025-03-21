@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Success circle -->
+  <circle cx="100" cy="100" r="90" fill="#009736" />
+  
+  <!-- Checkmark -->
+  <path d="M50,100 L90,140 L150,70" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- Palestinian flag colors as decorative elements -->
+  <circle cx="100" cy="25" r="10" fill="#000000" />
+  <circle cx="100" cy="175" r="10" fill="#ffffff" />
+  <circle cx="25" cy="100" r="10" fill="#ce1126" />
+  <circle cx="175" cy="100" r="10" fill="#009736" />
+</svg>
