@@ -5,7 +5,7 @@ This guide provides detailed instructions for deploying the Palestine NFT projec
 ## Server Information
 - **SSH Access**: `echoesofstreet`
 - **Server IP**: `95.216.25.234`
-- **Web Server**: Nginx (installed on port 8080)
+- **Web Server**: Nginx (installed on port 8080) and Apache (for other websites)
 - **Domain**: `voiceforpalestine.xyz`
 
 ## Prerequisites
@@ -14,6 +14,9 @@ Before deployment, ensure you have:
 2. The domain `voiceforpalestine.xyz` configured to point to the server
 3. The smart contract deployed to Polygon Mainnet
 4. The deployed contract address
+5. Server with Ubuntu 22.04 or later
+6. Nginx installed on the server
+7. Apache installed on the server (for other websites)
 
 ## Smart Contract Deployment
 
@@ -44,6 +47,112 @@ Before deployment, ensure you have:
    cd frontend
    npm run build
    ```
+
+## Server Configuration
+
+The application is deployed on a server with the following specifications:
+- IP Address: 95.216.25.234
+- Operating System: Ubuntu
+- Web Server: Nginx
+- SSH Access: User `echoesofstreet`
+
+For detailed information about the server configuration, including how multiple websites are hosted on this server, please refer to the [Multi-Site Server Configuration Guide](./MULTI_SITE_SERVER_CONFIGURATION.md).
+
+### Domain Setup
+
+The application is accessible at:
+- https://voiceforpalestine.xyz
+
+The domain is configured with:
+- SSL certificate from Let's Encrypt
+- HTTP to HTTPS redirection
+- Proper Next.js static asset handling
+
+### Web Server Configuration
+
+Nginx is configured to serve the Next.js application with:
+- Static asset caching
+- Gzip compression
+- Security headers
+- Proper routing for Next.js
+
+For detailed information about the Nginx configuration for Next.js, see the [final-nextjs-configuration.sh](./scripts/final-nextjs-configuration.sh) script.
+
+### Multi-Site Hosting
+
+This server hosts multiple websites:
+1. voiceforpalestine.xyz (Nginx, Next.js)
+2. pmimrankhan.xyz (Apache, proxied through Nginx)
+
+The configuration ensures that each site is properly isolated and served correctly. For adding additional websites to this server, follow the guidelines in the [Multi-Site Server Configuration Guide](./MULTI_SITE_SERVER_CONFIGURATION.md#adding-new-websites).
+
+### Potential Conflicts and Solutions
+
+The server has been configured to avoid common conflicts when hosting multiple websites:
+- Port binding conflicts between Nginx and Apache
+- Domain serving conflicts
+- SSL certificate conflicts
+- Static asset serving issues
+
+All these conflicts and their solutions are documented in the [Resolved Conflicts](./MULTI_SITE_SERVER_CONFIGURATION.md#resolved-conflicts) section of the Multi-Site Server Configuration Guide.
+
+### Legacy Configuration Information
+
+The following information is kept for historical reference but has been superseded by the current configuration:
+
+### Nginx Configuration
+Nginx is configured to serve the application on port 8080. This is because Apache is already using port 80 for other websites.
+
+```nginx
+server {
+    listen 8080;
+    server_name voiceforpalestine.xyz www.voiceforpalestine.xyz;
+    
+    root /var/www/voiceforpalestine.xyz;
+    index index.html;
+    
+    # Handle Next.js routes
+    location / {
+        try_files $uri $uri.html $uri/ /index.html;
+    }
+    
+    # Cache static assets
+    location ~* \.(jpg|jpeg|png|gif|ico|css|js)$ {
+        expires 30d;
+        add_header Cache-Control "public, no-transform";
+    }
+    
+    # Security headers
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    
+    # Enable compression
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+}
+```
+
+### Apache Reverse Proxy Configuration
+Apache is configured as a reverse proxy to forward requests for voiceforpalestine.xyz from port 80 to Nginx on port 8080. This allows the application to be accessed without specifying the port.
+
+```apache
+<VirtualHost *:80>
+    ServerName voiceforpalestine.xyz
+    ServerAlias www.voiceforpalestine.xyz
+    
+    ProxyPreserveHost On
+    ProxyPass / http://localhost:8080/
+    ProxyPassReverse / http://localhost:8080/
+    
+    ErrorLog ${APACHE_LOG_DIR}/voiceforpalestine-error.log
+    CustomLog ${APACHE_LOG_DIR}/voiceforpalestine-access.log combined
+</VirtualHost>
+```
+
+## Current Configuration
+
+The current server configuration uses Nginx as the primary web server listening on ports 80 and 443, with Apache running locally on ports 8081 and 8443. This setup is documented in detail in the [Multi-Site Server Configuration Guide](./MULTI_SITE_SERVER_CONFIGURATION.md).
 
 ## Server Deployment
 
@@ -86,24 +195,34 @@ sudo systemctl status nginx
    sudo nano /etc/nginx/sites-available/voiceforpalestine.xyz
    ```
 
-2. Add the following configuration:
+2. Add the Nginx configuration:
    ```nginx
    server {
        listen 8080;
        server_name voiceforpalestine.xyz www.voiceforpalestine.xyz;
-
+       
        root /var/www/voiceforpalestine.xyz;
        index index.html;
-
+       
+       # Handle Next.js routes
        location / {
            try_files $uri $uri.html $uri/ /index.html;
        }
-
+       
        # Cache static assets
        location ~* \.(jpg|jpeg|png|gif|ico|css|js)$ {
            expires 30d;
            add_header Cache-Control "public, no-transform";
        }
+       
+       # Security headers
+       add_header X-Content-Type-Options "nosniff" always;
+       add_header X-XSS-Protection "1; mode=block" always;
+       add_header X-Frame-Options "SAMEORIGIN" always;
+       
+       # Enable compression
+       gzip on;
+       gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
    }
    ```
 

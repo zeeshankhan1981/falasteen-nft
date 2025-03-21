@@ -203,6 +203,24 @@ The application is successfully deployed and accessible at:
 - This configuration ensures that each domain serves the correct content
 - The deployment scripts are available in the `scripts` directory
 
+### Multi-Site Server Configuration
+
+This server is configured to host multiple websites simultaneously. For detailed information about the server configuration, conflicts, and solutions, see:
+
+- [Multi-Site Server Configuration Guide](./MULTI_SITE_SERVER_CONFIGURATION.md) - Comprehensive documentation of the server setup
+- [DEPLOYMENT.md](./DEPLOYMENT.md) - Detailed deployment instructions
+
+### Server Management Scripts
+
+The following scripts are available to help manage the server:
+
+- [add-new-website.sh](./scripts/add-new-website.sh) - Script to add a new website to the server
+- [troubleshoot-server.sh](./scripts/troubleshoot-server.sh) - Script to troubleshoot common server issues
+- [backup-server-config.sh](./scripts/backup-server-config.sh) - Script to backup the server configuration
+- [final-nextjs-configuration.sh](./scripts/final-nextjs-configuration.sh) - Script documenting the Next.js configuration
+
+These scripts are designed to make it easy to manage multiple websites on the same server while avoiding conflicts.
+
 ## Production Deployment
 
 ### Environment Configuration
