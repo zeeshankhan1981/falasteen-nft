@@ -198,6 +198,8 @@ The application is successfully deployed and accessible at:
 - The application is deployed on a server with IP 95.216.25.234
 - Nginx is configured to serve the application on port 8080
 - Apache is also running on the server for other websites (pmimrankhan.xyz)
+- Due to port conflicts, voiceforpalestine.xyz is accessible on port 8080
+- See DNS_CONFIGURATION.md for recommendations on improving the domain setup
 - The deployment scripts are available in the `scripts` directory
 
 ## Production Deployment
