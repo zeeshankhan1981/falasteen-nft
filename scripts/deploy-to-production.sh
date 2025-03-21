@@ -15,7 +15,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 echo -e "${YELLOW}Starting deployment process for Palestine NFT Project${NC}"
-echo -e "${YELLOW}Target: $SERVER_USER@$SERVER_IP:$DEPLOY_PATH${NC}"
+echo -e "${YELLOW}Target: ssh $SERVER_USER (IP: $SERVER_IP)${NC}"
 
 # Step 1: Build the frontend
 echo -e "${YELLOW}Building frontend application...${NC}"
@@ -60,24 +60,24 @@ fi
 
 # Create deployment directory on server
 echo -e "${YELLOW}Creating deployment directory on server...${NC}"
-ssh $SERVER_USER@$SERVER_IP "mkdir -p $DEPLOY_PATH"
+ssh $SERVER_USER "mkdir -p $DEPLOY_PATH"
 
 # Copy package.json and package-lock.json for dependencies
 echo -e "${YELLOW}Copying package files...${NC}"
-scp package.json package-lock.json $SERVER_USER@$SERVER_IP:$DEPLOY_PATH/
+scp package.json package-lock.json $SERVER_USER:$DEPLOY_PATH/
 
 # Copy the build files
 echo -e "${YELLOW}Copying build files...${NC}"
-rsync -avz --delete $DEPLOY_SOURCE $SERVER_USER@$SERVER_IP:$DEPLOY_PATH/
+rsync -avz --delete $DEPLOY_SOURCE $SERVER_USER:$DEPLOY_PATH/
 
 # Copy public directory
 echo -e "${YELLOW}Copying public assets...${NC}"
-rsync -avz public/ $SERVER_USER@$SERVER_IP:$DEPLOY_PATH/public/
+rsync -avz public/ $SERVER_USER:$DEPLOY_PATH/public/
 
 # If using .next, also copy node_modules
 if [ "$DEPLOY_SOURCE" = ".next/" ]; then
   echo -e "${YELLOW}Installing production dependencies on server...${NC}"
-  ssh $SERVER_USER@$SERVER_IP "cd $DEPLOY_PATH && npm install --production"
+  ssh $SERVER_USER "cd $DEPLOY_PATH && npm install --production"
 fi
 
 # Step 3: Configure Nginx
@@ -115,11 +115,11 @@ EOF
 
 # Copy Nginx config to server
 echo -e "${YELLOW}Copying Nginx configuration to server...${NC}"
-scp nginx.conf $SERVER_USER@$SERVER_IP:/tmp/nginx-$DOMAIN.conf
+scp nginx.conf $SERVER_USER:/tmp/nginx-$DOMAIN.conf
 
 # Move Nginx config to proper location and reload Nginx
 echo -e "${YELLOW}Installing Nginx configuration and reloading...${NC}"
-ssh $SERVER_USER@$SERVER_IP "sudo mv /tmp/nginx-$DOMAIN.conf /etc/nginx/sites-available/$DOMAIN && \
+ssh $SERVER_USER "sudo mv /tmp/nginx-$DOMAIN.conf /etc/nginx/sites-available/$DOMAIN && \
 sudo ln -sf /etc/nginx/sites-available/$DOMAIN /etc/nginx/sites-enabled/ && \
 sudo nginx -t && sudo systemctl reload nginx"
 

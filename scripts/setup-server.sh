@@ -15,7 +15,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 echo -e "${YELLOW}Starting server setup for Palestine NFT Project${NC}"
-echo -e "${YELLOW}Target: $SERVER_USER@$SERVER_IP${NC}"
+echo -e "${YELLOW}Target: ssh $SERVER_USER (IP: $SERVER_IP)${NC}"
 
 # Create setup script to run on the server
 cat > server-setup.sh << 'EOF'
@@ -88,11 +88,11 @@ EOF
 
 # Copy setup script to server
 echo -e "${YELLOW}Copying setup script to server...${NC}"
-scp server-setup.sh $SERVER_USER@$SERVER_IP:~/server-setup.sh
+scp server-setup.sh $SERVER_USER:~/server-setup.sh
 
 # Make script executable and run it
 echo -e "${YELLOW}Running setup script on server...${NC}"
-ssh $SERVER_USER@$SERVER_IP "chmod +x ~/server-setup.sh && ~/server-setup.sh"
+ssh $SERVER_USER "chmod +x ~/server-setup.sh && ~/server-setup.sh"
 
 # Clean up local script
 rm server-setup.sh
