@@ -15,7 +15,8 @@ This project allows users to mint NFTs on the Polygon network, with all proceeds
 - **SSH Access**: `echoesofstreet`
 - **Server IP**: `95.216.25.234`
 - **Web Server**: Nginx installed using port 8080
-- **Domain**: voiceforpalestine.xyz
+- **Domain**: voiceforpalestine.xyz hosted on server pointing to 95.216.25.234
+- **MISCELLANEOUS**: This server is also hosting pmimrankhan.xyz on the apache2 server
 
 ## Tech Stack
 
@@ -187,6 +188,17 @@ When testing the NFT minting functionality, you may encounter the following issu
 - If transactions fail, check that you have enough ETH in your wallet
 - For local testing, import one of the Hardhat test accounts into MetaMask
 - Private keys for test accounts are shown when running `npx hardhat node`
+
+## Deployment Status
+
+The application is successfully deployed and accessible at:
+- http://voiceforpalestine.xyz:8080
+
+### Deployment Notes
+- The application is deployed on a server with IP 95.216.25.234
+- Nginx is configured to serve the application on port 8080
+- Apache is also running on the server for other websites (pmimrankhan.xyz)
+- The deployment scripts are available in the `scripts` directory
 
 ## Production Deployment
 
