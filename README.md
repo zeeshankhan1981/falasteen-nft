@@ -188,6 +188,67 @@ When testing the NFT minting functionality, you may encounter the following issu
 - For local testing, import one of the Hardhat test accounts into MetaMask
 - Private keys for test accounts are shown when running `npx hardhat node`
 
+## Production Deployment
+
+### Environment Configuration
+
+The application supports different environments through environment variables:
+
+1. **Copy the example environment files**:
+   ```bash
+   # For development
+   cp frontend/.env.local.example frontend/.env.local
+   
+   # For production
+   cp frontend/.env.production.example frontend/.env.production
+   ```
+
+2. **Configure environment variables**:
+   - `NEXT_PUBLIC_NETWORK`: Network to use (`hardhat`, `sepolia`, or `mainnet`)
+   - `NEXT_PUBLIC_ENABLE_SIMULATION`: Enable simulation mode (`true` or `false`)
+   - `NEXT_PUBLIC_INFURA_KEY`: Your Infura API key
+
+### Simulation Mode
+
+The application includes a simulation mode for testing without requiring actual blockchain transactions:
+
+- When simulation mode is enabled, the app will generate fake token IDs and transaction hashes
+- No MetaMask popups or gas fees are required
+- User feedback indicates when a mint is simulated vs. real
+
+To enable simulation mode:
+```
+NEXT_PUBLIC_ENABLE_SIMULATION=true
+```
+
+### Deployment to Production
+
+1. **Deploy smart contracts to mainnet**:
+   ```bash
+   cd backend
+   npx hardhat run scripts/deploy.js --network mainnet
+   ```
+
+2. **Update contract addresses**:
+   - Update the contract address in `frontend/lib/config.js` in the mainnet section
+   - Or set the `NEXT_PUBLIC_CONTRACT_ADDRESS` environment variable
+
+3. **Build and deploy the frontend**:
+   ```bash
+   cd frontend
+   npm run build
+   npm run export  # Creates a static export in the 'out' directory
+   ```
+
+4. **Deploy to your web server**:
+   ```bash
+   # Example using rsync to deploy to your server
+   rsync -avz --delete frontend/out/ echoesofstreet@95.216.25.234:/var/www/voiceforpalestine.xyz/
+   ```
+
+5. **Configure Nginx**:
+   - See `DEPLOYMENT.md` for detailed Nginx configuration instructions
+
 ## Deployment
 
 ### Smart Contract Deployment

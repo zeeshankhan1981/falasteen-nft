@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { CONTRACT_ADDRESS, NFT_PRICE, CHAIN_ID } from "./config";
+import { CONTRACT_ADDRESS, NFT_PRICE, CHAIN_ID, SIMULATION_ENABLED } from "./config";
 import contractAbi from "./contractAbi.json";
 
 export const mintNFT = async (signer, metadataURI) => {
@@ -8,10 +8,11 @@ export const mintNFT = async (signer, metadataURI) => {
     console.log("Metadata URI:", metadataURI);
     console.log("NFT Price from config:", NFT_PRICE, "ETH");
     console.log("Chain ID:", CHAIN_ID);
+    console.log("Simulation enabled:", SIMULATION_ENABLED);
     
-    // For local testing, always simulate the mint
-    if (CHAIN_ID === 31337) {
-      console.log("Local Hardhat network detected - simulating successful mint without transaction");
+    // For testing, simulate the mint if enabled
+    if (SIMULATION_ENABLED) {
+      console.log("Simulation mode active - simulating successful mint without transaction");
       
       // Generate a fake token ID (for testing only)
       const fakeTokenId = Math.floor(Math.random() * 1000) + 1;
