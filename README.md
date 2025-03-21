@@ -192,14 +192,15 @@ When testing the NFT minting functionality, you may encounter the following issu
 ## Deployment Status
 
 The application is successfully deployed and accessible at:
-- http://voiceforpalestine.xyz:8080
+- http://voiceforpalestine.xyz
 
 ### Deployment Notes
 - The application is deployed on a server with IP 95.216.25.234
-- Nginx is configured to serve the application on port 8080
-- Apache is also running on the server for other websites (pmimrankhan.xyz)
-- Due to port conflicts, voiceforpalestine.xyz is accessible on port 8080
-- See DNS_CONFIGURATION.md for recommendations on improving the domain setup
+- Nginx is configured as the main web server listening on ports 80 and 443
+- Nginx directly serves voiceforpalestine.xyz from /var/www/voiceforpalestine.xyz
+- Apache is running locally on ports 8081 and 8443
+- Nginx proxies requests for pmimrankhan.xyz to Apache
+- This configuration ensures that each domain serves the correct content
 - The deployment scripts are available in the `scripts` directory
 
 ## Production Deployment
